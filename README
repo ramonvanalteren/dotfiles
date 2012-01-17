@@ -1,0 +1,10 @@
+= Simple repository for all my dotfiles
+
+I currently have a vim dotfile repos, which is annoying me 'cause I want all of my dotfiles on github and not just my
+vimdotfiles. In addition to that I like my auto-updating script for vim plugins, I'd like to do that for other dotfiled stuff as well
+
+== TODO
+
+* Create a makefile to install all dotfiles in the correct place
+* Add dotfiles: vim, git, bash atm.
+
