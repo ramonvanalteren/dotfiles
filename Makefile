@@ -4,19 +4,22 @@
 
 default: all
 
-VIM := $(HOME)/.vim/
-GIT := $(HOME)/.git/
+VIM := $(HOME)/.vim
+GIT := $(HOME)/.git
 BASH := $(HOME)/.bash 
+VIMSRC := dotvim
 
 $(VIM):
 	mkdir $@
-$(VIM)/autoload:
-	cp -rap dotvim/autoload $@
-$(VIM)/vimrc:
-	cp dotvim/vimrc $@
-	ln -sf $(@)/vimrc $(HOME)/.vimrc
+$(VIM)/autoload/pathogen.vim: $(VIMSRC)/autoload/pathogen.vim
+	-@mkdir $(dir $@)
+	cp $< $@
 
-$(VIM)/update_bundles.rb: $(VIM) $(VIM)/autoload $(VIM)/vimrc dotvim/update_bundles.rb
+$(VIM)/vimrc: $(VIMSRC)/vimrc
+	cp $< $@
+	ln -sf $@ $(HOME)/.vimrc
+
+$(VIM)/update_bundles.rb: $(VIM) $(VIM)/autoload/pathogen.vim $(VIM)/vimrc $(VIMSRC)/update_bundles.rb
 	cp dotvim/update_bundles.rb $@
 	$@
 
@@ -30,6 +33,6 @@ $(BASH):
 	ln -sf $@/bashrc $(HOME)/.bashrc
 	ln -sf $@/bash_profile $(HOME)/.bash_profile
 
-all: $(GIT) $(BASH) $(VIM)/update_bundles.rb
+all: $(VIM)/update_bundles.rb
 
 # vi: noexpandtab ts=4 sw=4 ai
