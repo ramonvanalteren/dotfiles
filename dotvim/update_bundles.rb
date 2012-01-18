@@ -19,7 +19,7 @@ git_bundles = [
   "git://github.com/tpope/vim-vividchalk.git",
   "git://github.com/tsaleh/vim-matchit.git",
   "git://github.com/tsaleh/vim-shoulda.git",
-  "git://github.com/tsaleh/vim-tcomment.git",
+  "git://github.com/tomtom/tcomment_vim",
   "git://github.com/tsaleh/vim-tmux.git",
   "git://github.com/vim-ruby/vim-ruby.git",
   "git://github.com/vim-scripts/Gist.vim.git",
@@ -50,14 +50,17 @@ end
 
 FileUtils.cd(bundles_dir)
 
-puts "trashing everything (lookout!)"
-Dir["*"].each {|d| FileUtils.rm_rf d }
-
 git_bundles.each do |url|
   dir = url.split('/').last.sub(/\.git$/, '')
-  puts "unpacking #{url} into #{dir}"
-  `git clone #{url} #{dir}`
-  FileUtils.rm_rf(File.join(dir, ".git"))
+  if not File.directory? dir
+    puts "unpacking #{url} into #{dir}"
+    `git clone #{url} #{dir}`
+  else
+      puts "Updating existing repo:#{url} for #{dir}"
+      FileUtils.cd(dir)
+      `git pull`
+      FileUtils.cd(bundles_dir)
+    end
 end
 
 vim_org_scripts.each do |name, script_id, script_type|
@@ -68,3 +71,4 @@ vim_org_scripts.each do |name, script_id, script_type|
     file << open("http://www.vim.org/scripts/download_script.php?src_id=#{script_id}").read
   end
 end
+
